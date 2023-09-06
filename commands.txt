@@ -1,0 +1,18 @@
+az account show
+az account set -s "subscription name"
+
+az group create --name rg-appservice-dev --location centralindia
+
+az group create --name rg-appservice-test --location centralindia
+
+az deployment group create \
+  --name DEP-AppService-Dev \
+  --template-file deploy.json \
+  --parameters appservice-dev-parameters.json \
+  --resource-group rg-appservice-dev
+
+az deployment group create \
+  --name DEP-AppService-Test \
+  --template-file deploy.json \
+  --parameters appservice-test-parameters.json \
+  --resource-group rg-appservice-test

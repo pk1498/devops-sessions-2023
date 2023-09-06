@@ -1,0 +1,74 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "exampleParameter": {
+            "type": "int",
+            "defaultValue": 10,
+            "allowedValues": [0,10,20,30],
+            "maxValue": 30,
+            "minValue": 0,
+            "metadata": {
+                "description": "This is an example parameter"
+            }
+        }
+    },
+    "variables": {
+        "exampleVariable_1": "[add(parameters('exampleParameter'), 10)]",
+        "exampleVariable_2": "[sub(parameters('exampleParameter'), 5)]"
+    },
+    "functions": [
+        {
+            "namespace": "exampleFunction",
+            "members": {
+                "maxNumber": {
+                    "parameters": [
+                        {
+                            "name": "parameter1",
+                            "type": "int"
+                        },
+                        {
+                            "name": "parameter2",
+                            "type": "int"
+                        }
+                    ],
+                    "output": {
+                        "type": "int",
+                        "value": "[max(parameters('parameter1'), parameters('parameter2'))]"
+                    }
+                }
+            }
+        }
+    ],
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-04-01",
+            "name": "storageexamplefy22",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard_LRS"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "supportsHttpsTrafficOnly": true
+            }
+        }
+    ],
+    "outputs": {
+        "exampleOutput": {
+            "type": "int",
+            "value": "[exampleFunction.maxNumber(variables('exampleVariable_1'), variables('exampleVariable_2'))]",
+            "metadata": {
+                "description": "This is an output of example function."
+            }
+        },
+        "storageAccountRegion": {
+            "type": "string",
+            "value": "[resourceGroup().location]",
+            "metadata": {
+                "description": "The Region of the Storage Account."
+            }
+        }
+    }
+}
